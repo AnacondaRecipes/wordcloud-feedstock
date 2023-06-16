@@ -42,11 +42,12 @@ about:
   home: https://github.com/amueller/word_cloud
   license: MIT
   license_file: LICENSE
+  license_family: MIT
   summary: A little word cloud generator in Python
   description: |
     A little word cloud generator in Python.
   dev_url: https://github.com/amueller/word_cloud
-  doc_url: http://amueller.github.io/word_cloud/
+  doc_url: https://amueller.github.io/word_cloud/
 
 
 extra:
