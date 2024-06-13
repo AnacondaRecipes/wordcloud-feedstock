@@ -1,0 +1,6 @@
+[submodule "wordcloud-feedstock" ]
+    path = include/foo
+    branch = master
+    url = ../wordcloud-feedstock
+
+
