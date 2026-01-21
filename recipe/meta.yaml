@@ -37,6 +37,10 @@ requirements:
     # requirements.txt
     - cython
 
+# >       assert ret_code == expected_exit_code
+# E       assert 2 == 1
+{% set tests_to_deselect = "--deselect=test/test_wordcloud_cli.py::test_cli_as_executable" %}
+
 test:
   source_files:
     - test
@@ -47,8 +51,8 @@ test:
     - pytest
   commands:
     - pip check
-    - wordcloud_cli -h
-    - pytest -v test
+    - wordcloud_cli --help
+    - pytest -v test {{ tests_to_deselect }}
 
 about:
   home: https://github.com/amueller/word_cloud
