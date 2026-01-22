@@ -1,22 +1,24 @@
-{% set version = "1.9.4" %}
+{% set name = "wordcloud" %}
+{% set version = "1.9.5" %}
 
 package:
-  name: wordcloud
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/w/wordcloud/wordcloud-{{ version }}.tar.gz
-  sha256: b273d8a5ded97d3ead904046b49464dcb71119ee79df875072a4c105cadd347a
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 6ac7c1378f2886d7e849600a306febd41d0d46b15ce876d665a3e549f5403b0b
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-  skip: True  # [py<37]
+  skip: True  # [py<39]
   entry_points:
     - wordcloud_cli = wordcloud.__main__:main
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
   host:
     - python
@@ -25,20 +27,32 @@ requirements:
     - setuptools
     - cython >=0.29.33
     - setuptools-scm
+    - numpy {{ numpy }}
   run:
     - python
     - pillow
-    - numpy >=1.6.1
-    - matplotlib-base
+    # Numpy >=1.19 in specified in the upstream but numpy>2 version will be inherited from the run export
+    - numpy
+    - matplotlib-base >=1.5.3
+    # requirements.txt
+    - cython
+
+# >       assert ret_code == expected_exit_code
+# E       assert 2 == 1
+{% set tests_to_deselect = "--deselect=test/test_wordcloud_cli.py::test_cli_as_executable" %}
 
 test:
+  source_files:
+    - test
   imports:
     - wordcloud
   requires:
     - pip
+    - pytest
   commands:
     - pip check
-    - wordcloud_cli -h
+    - wordcloud_cli --help
+    - pytest -v test {{ tests_to_deselect }}
 
 about:
   home: https://github.com/amueller/word_cloud
@@ -49,7 +63,7 @@ about:
   description: |
     A little word cloud generator in Python.
   dev_url: https://github.com/amueller/word_cloud
-  doc_url: https://amueller.github.io/word_cloud/
+  doc_url: https://amueller.github.io/word_cloud
 
 
 extra:
